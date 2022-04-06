@@ -30,4 +30,17 @@ public class Metodi {
         Instant end = Instant.now();
         System.out.println(Duration.between(start, end).toMinutes());
     }
+    public static boolean contenutoValido(byte[] daVerificare, byte[] obiettivo) {
+        if (daVerificare.length < obiettivo.length) throw new IllegalArgumentException("Arrays in input non validi o invertiti");
+        int indiceObiettivo = 0;
+        for (int i = 0; i < daVerificare.length; i++) {
+            if (daVerificare[i] != obiettivo[indiceObiettivo]) {
+                indiceObiettivo = 0;
+            } else {
+                indiceObiettivo++;
+            }
+            if (indiceObiettivo == obiettivo.length) return true;
+        }
+        return false;
+    }
 }
