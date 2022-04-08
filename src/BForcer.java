@@ -1,41 +1,42 @@
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.nio.charset.StandardCharsets;
+
 import crypto.CryptoUtils;
+import crypto.CryptoUtilsRework;
 
 public class BForcer extends Thread{
-    private int inizio, fine, id;
-    File input;
-    String indizio;
-    BForcer[] bForces;
+    private final int inizio, fine, id;
+    private BForcer[] bForces;
+    private byte[]  outputArray;
+    private final byte[] inputArray, indizioArray;
 
-    public BForcer(File input, int inizio, int fine, int id, String indizio, BForcer[] bForces) {
+    public BForcer(byte[] inputArray, int inizio, int fine, int id, byte[] indizioArray, BForcer[] bForces) {
         super();
-        this.input = input;
+        this.inputArray = inputArray;
         this.inizio = inizio;
         this.fine = fine;
         this.id = id;
-        this.indizio = indizio;
+        this.indizioArray = indizioArray;
         this.bForces = bForces;
     }
 
     @Override
     public void run() {
-
         System.out.println("comincio thread "+ id + " da "+inizio+" a "+fine);
         for (int i = inizio; i < fine; i++) {
-            String chiave = Metodi.dammiStringa(i);
             try {
-                String outputName = "forced" + id + ".possible";
-                CryptoUtils.decrypt(chiave, input, new File(outputName));
-                BufferedReader br = new BufferedReader(new FileReader(outputName));
-                String s = "";
-                while (s != null) {
-                    s = br.readLine();
-                    if(s.contains(indizio)) {
-                        System.out.println(" la chiave corretta è" + chiave + " il file decifrato è " + outputName);
-                        interrompiTutti();
-                    }
+                byte[] chiave = Metodi.dammiChiave(i);
+                CryptoUtilsRework.decrypt(chiave, inputArray, outputArray);
+                if (Metodi.contenutoValido(outputArray, indizioArray)) {
+                    File fine = new File("fine.dec");
+                    FileOutputStream outputStream = new FileOutputStream(fine);
+                    outputStream.write(outputArray);
+                    outputStream.close();
+                    System.out.println("la chiave trovata dal thread "+id+" è "+ Metodi.dammiStringa(i)+" e il file in output è fine.dec");
+                    interrompiTutti();
                 }
             } catch (Exception e) {
             }
