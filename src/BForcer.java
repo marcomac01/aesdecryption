@@ -1,4 +1,4 @@
-public class BForcer extends Thread{
+class BForcer extends Thread{
     private final int inizio, fine, id;
     private BForcer[] bForces;
     private byte[]  outputArray;

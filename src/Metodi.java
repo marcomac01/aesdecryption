@@ -9,7 +9,7 @@ import java.time.Duration;
 import java.time.Instant;
 
 public class Metodi {
-    public static String dammiStringa(Integer intero) {
+    static String dammiStringa(Integer intero) {
         if (intero < 0) throw new IllegalArgumentException("Valore negativo");
         StringBuilder stringa = new StringBuilder();
         for(int i = 0; i < 16 - intero.toString().length(); i++, stringa.append("0"));
@@ -17,7 +17,7 @@ public class Metodi {
         return stringa.toString();
     }
 
-    public static byte[] dammiChiave(Integer intero) {
+    static byte[] dammiChiave(Integer intero) {
         return dammiStringa(intero).getBytes();
     }
 
@@ -41,7 +41,7 @@ public class Metodi {
         System.out.println("Tempo impiegato: " + Duration.between(start, end).toMinutes() + " minuti");
     }
 
-    public static boolean contenutoValido(byte[] daVerificare, byte[] obiettivo) {
+    static boolean contenutoValido(byte[] daVerificare, byte[] obiettivo) {
         if (daVerificare.length < obiettivo.length) throw new IllegalArgumentException("Arrays in input non validi o invertiti");
         int indiceObiettivo = 0;
         for (int i = 0; i < daVerificare.length; i++) {
@@ -55,7 +55,7 @@ public class Metodi {
         return false;
     }
 
-    public static byte[] leggiFile(File input) throws IOException {
+    static byte[] leggiFile(File input) throws IOException {
         FileInputStream fIS = new FileInputStream(input);
         byte[] ret = new byte[(int) input.length()];
         fIS.read(ret);
@@ -63,14 +63,14 @@ public class Metodi {
         return ret;
     }
 
-    public static void scriviFile(String pathNome, byte[] outputArray) throws Exception {
+    static void scriviFile(String pathNome, byte[] outputArray) throws Exception {
         File file = new File(pathNome);
         FileOutputStream outputStream = new FileOutputStream(file);
         outputStream.write(outputArray);
         outputStream.close();
     }
 
-    public static byte[] decifra(byte[] chiave, byte[] input) {
+    static byte[] decifra(byte[] chiave, byte[] input) {
         try {
             Key chiaveSegreta = new SecretKeySpec(chiave, "AES");
             Cipher cipher = Cipher.getInstance("AES");

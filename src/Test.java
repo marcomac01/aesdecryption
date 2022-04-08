@@ -2,6 +2,7 @@ import java.io.File;
 
 public class Test {
     public static void main(String[] args) throws Exception {
-        Metodi.bruteForce(4, new File("document2022.encrypted"), "SISOP-corsoB");
+        System.out.println(Integer.MAX_VALUE);
+        Metodi.bruteForce(1, new File("document2022.encrypted"), "SISOP-corsoB");
     }
 }
