@@ -1,24 +1,24 @@
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.time.Duration;
 import java.time.Instant;
 
 public class Metodi {
-    public static byte[] dammiChiave(Integer intero) {
-        if (intero < 0) throw new IllegalArgumentException("Valore negativo");
-        StringBuilder stringa = new StringBuilder();
-        for(int i = 0; i < 16 - intero.toString().length(); i++, stringa.append("0"));
-        stringa.append(intero);
-        return stringa.toString().getBytes();
-    }
     public static String dammiStringa(Integer intero) {
         if (intero < 0) throw new IllegalArgumentException("Valore negativo");
         StringBuilder stringa = new StringBuilder();
         for(int i = 0; i < 16 - intero.toString().length(); i++, stringa.append("0"));
         stringa.append(intero);
         return stringa.toString();
+    }
+
+    public static byte[] dammiChiave(Integer intero) {
+        return dammiStringa(intero).getBytes();
     }
 
     public static void bruteForce(int nThread, File input, String indizio) throws Exception{
@@ -38,8 +38,9 @@ public class Metodi {
         }
         for (int i = 0; i < nThread; i++) bForcers[i].join();
         Instant end = Instant.now();
-        System.out.println(Duration.between(start, end).toMinutes());
+        System.out.println("Tempo impiegato: " + Duration.between(start, end).toMinutes() + " minuti");
     }
+
     public static boolean contenutoValido(byte[] daVerificare, byte[] obiettivo) {
         if (daVerificare.length < obiettivo.length) throw new IllegalArgumentException("Arrays in input non validi o invertiti");
         int indiceObiettivo = 0;
@@ -61,4 +62,23 @@ public class Metodi {
         fIS.close();
         return ret;
     }
+
+    public static void scriviFile(String pathNome, byte[] outputArray) throws Exception {
+        File file = new File(pathNome);
+        FileOutputStream outputStream = new FileOutputStream(file);
+        outputStream.write(outputArray);
+        outputStream.close();
+    }
+
+    public static byte[] decifra(byte[] chiave, byte[] input) {
+        try {
+            Key chiaveSegreta = new SecretKeySpec(chiave, "AES");
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.DECRYPT_MODE, chiaveSegreta);
+            return cipher.doFinal(input);
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
 }

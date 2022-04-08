@@ -1,12 +1,3 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.nio.charset.StandardCharsets;
-
-import crypto.CryptoUtils;
-import crypto.CryptoUtilsRework;
-
 public class BForcer extends Thread{
     private final int inizio, fine, id;
     private BForcer[] bForces;
@@ -25,25 +16,24 @@ public class BForcer extends Thread{
 
     @Override
     public void run() {
-        System.out.println("comincio thread "+ id + " da "+inizio+" a "+fine);
-        for (int i = inizio; i < fine; i++) {
+        System.out.println("Il thread "+ id + " comincia da "+inizio+" a "+fine);
+        for (int i = inizio; i < fine && !this.isInterrupted(); i++) {
             try {
                 byte[] chiave = Metodi.dammiChiave(i);
-                CryptoUtilsRework.decrypt(chiave, inputArray, outputArray);
+                outputArray = Metodi.decifra(chiave, inputArray);
                 if (Metodi.contenutoValido(outputArray, indizioArray)) {
-                    File fine = new File("fine.dec");
-                    FileOutputStream outputStream = new FileOutputStream(fine);
-                    outputStream.write(outputArray);
-                    outputStream.close();
-                    System.out.println("la chiave trovata dal thread "+id+" è "+ Metodi.dammiStringa(i)+" e il file in output è fine.dec");
-                    interrompiTutti();
+                    Metodi.scriviFile("Decifrato.dec", outputArray);
+                    System.out.println("La chiave trovata sembra essere "+ Metodi.dammiStringa(i));
+                    System.out.println("Il file in output ha nome Decifrato.dec");
+                    interrompiTuttiNotThis();
+                    break;
                 }
             } catch (Exception e) {
             }
         }
     }
-    private void interrompiTutti() {
-        for(BForcer bf : bForces) if(bf != this) bf.interrupt();
-        this.interrupt();
+
+    private void interrompiTuttiNotThis() {
+        for(int i = 0; i < bForces.length; i++) if(i != this.id) bForces[i].interrupt();
     }
 }
