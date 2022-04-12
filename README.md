@@ -21,7 +21,7 @@ Siccome si opera in un intervallo specifico, quello che ho pensato di fare è di
 
 ### Esecuzione
 
-* tenere a portata di mano il percorso del file da decifrare e una parola (sotostringa) che aiuti il programma nella ricerca della chiave
+* tenere a portata di mano il percorso del file da decifrare e una parola (sottostringa) che aiuti il programma nella ricerca della chiave
 * adattare il file di Test.java
 * eseguire il suo main
 
