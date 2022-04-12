@@ -1,5 +1,6 @@
 # AES Decryption
 
+!PRESENTAZIONE INCOMPLETA!
 Decifrazione di un file in AES (chiave a 16 caratteri fino ad Integer.MAX_VALUE)
 Per maggiori info aprire il file Esercizio.pdf
 
